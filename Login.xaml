@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoMotos.NewPage1"
+             Title="NewPage1">
+    <StackLayout Padding="30">
+        <!-- Título de la aplicación -->
+        <Label Text="Iniciar Sesión"
+               FontSize="32"
+               HorizontalOptions="Center" />
+
+        <!-- Campo de usuario -->
+        <Entry x:Name="usernameEntry"
+               Placeholder="Usuario"
+               Keyboard="Text"
+               Margin="0,20,0,0" />
+
+        <!-- Campo de contraseña -->
+        <Entry x:Name="passwordEntry"
+               Placeholder="Contraseña"
+               IsPassword="True"
+               Keyboard="Text" />
+
+        <!-- Botón de login -->
+        <Button Text="Iniciar sesión"
+                Clicked="OnLoginClicked"
+                HorizontalOptions="Center"
+                Margin="0,20,0,0" />
+
+    </StackLayout>
+</ContentPage>
