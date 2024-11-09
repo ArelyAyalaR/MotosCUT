@@ -66,26 +66,10 @@ namespace ProyectoMotos
         // Método para registrarse
         private async void OnRegisterClicked(object sender, EventArgs e)
         {
-            string email = emailEntry.Text;
-            string password = passwordEntry.Text;
-
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
-            {
-                await DisplayAlert("Error", "Por favor ingrese un correo electrónico y una contraseña", "OK");
-                return;
-            }
-
-            bool registroExitoso = await RegistrarUsuarioAsync(email, password);
-
-            if (registroExitoso)
-            {
-                await DisplayAlert("Éxito", "Registro exitoso. Ahora puedes iniciar sesión.", "OK");
-            }
-            else
-            {
-                await DisplayAlert("Error", "Error al registrar usuario. Intente nuevamente.", "OK");
-            }
+            // Redirige a la nueva página de registro
+            await Navigation.PushAsync(new RegistroPage());
         }
+
 
         private async void OnLoginClicked(object sender, EventArgs e)
         {

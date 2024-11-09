@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ProyectoMotos.RegistroPage"
+             BackgroundColor="{DynamicResource PageBackgroundColor}">
+
+	<StackLayout Padding="10">
+
+		<!-- Título de la página -->
+		<Label Text="Página de Registro"
+               HorizontalOptions="Center"
+               VerticalOptions="CenterAndExpand"
+               FontSize="24" />
+
+		<!-- Datos de usuario -->
+		<Label Text="Nombre" />
+		<Entry x:Name="firstNameEntry" Placeholder="Ingrese su nombre" />
+
+		<Label Text="Apellido" />
+		<Entry x:Name="lastNameEntry" Placeholder="Ingrese su apellido" />
+
+		<Label Text="Correo electrónico" />
+		<Entry x:Name="emailEntry" Placeholder="Ingrese su correo electrónico" Keyboard="Email" />
+
+		<Label Text="Contraseña" />
+		<Entry x:Name="passwordEntry" Placeholder="Ingrese su contraseña" IsPassword="True" />
+
+		<!-- Datos de la motocicleta -->
+		<Label Text="Placa de la moto" />
+		<Entry x:Name="licensePlateEntry" Placeholder="Ingrese la placa de la moto" />
+
+		<Label Text="Modelo de la moto" />
+		<Entry x:Name="modelEntry" Placeholder="Ingrese el modelo de la moto" />
+
+		<Label Text="Marca de la moto" />
+		<Entry x:Name="brandEntry" Placeholder="Ingrese la marca de la moto" />
+
+		<!-- Botón para registrar -->
+		<Button Text="Registrar" Clicked="OnRegisterClicked" />
+
+	</StackLayout>
+
+</ContentPage>
