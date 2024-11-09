@@ -2,6 +2,8 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
+using System.Data;
+using System.Diagnostics;
 
 namespace ProyectoMotos
 {
@@ -14,32 +16,6 @@ namespace ProyectoMotos
             InitializeComponent();
         }
 
-        // Método para iniciar sesión
-        private async void OnLoginClicked(object sender, EventArgs e)
-        {
-            string email = emailEntry.Text;
-            string password = passwordEntry.Text;
-
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
-            {
-                await DisplayAlert("Error", "Por favor ingrese un correo electrónico y una contraseña", "OK");
-                return;
-            }
-
-            // Valida al usuario y obtén sus datos
-            var user = await ObtenerDatosUsuarioAsync(email, password);
-
-            if (user != null)
-            {
-                await DisplayAlert("Éxito", "Login exitoso", "OK");
-                // Navega a HomePage pasando los datos del usuario
-                await Navigation.PushAsync(new HomePage(user.FirstName, user.LastName, user.Email));
-            }
-            else
-            {
-                await DisplayAlert("Error", "Correo o contraseña incorrectos", "OK");
-            }
-        }
 
         // Método para obtener los datos del usuario autenticado
         private async Task<User?> ObtenerDatosUsuarioAsync(string email, string contrasena)
@@ -111,8 +87,46 @@ namespace ProyectoMotos
             }
         }
 
-        // Método para validar al usuario en la base de datos
-        private async Task<bool> ValidarUsuarioAsync(string email, string contrasena)
+        private async void OnLoginClicked(object sender, EventArgs e)
+        {
+            string email = emailEntry.Text;
+            string password = passwordEntry.Text;
+
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                await DisplayAlert("Error", "Por favor ingrese un correo electrónico y una contraseña", "OK");
+                return;
+            }
+
+            var (loginExitoso, esAdmin) = await ValidarUsuarioAsync(email, password);
+
+            // Depuración: Verificar valores de loginExitoso y esAdmin
+            Debug.WriteLine($"Login exitoso: {loginExitoso}, esAdmin: {esAdmin}");
+
+            if (loginExitoso)
+            {
+                await DisplayAlert("Éxito", "Login exitoso", "OK");
+
+                if (esAdmin)
+                {
+                    // Depuración: Verificar que la condición esAdmin está funcionando
+                    Debug.WriteLine("Usuario es Admin. Navegando a AdminPage");
+                    await Navigation.PushAsync(new AdminPage(email, "", ""));
+                }
+                else
+                {
+                    // Depuración: Verificar que la condición esAdmin está funcionando
+                    Debug.WriteLine("Usuario NO es Admin. Navegando a HomePage");
+                    await Navigation.PushAsync(new HomePage(email, "", ""));  //Aqui 
+                }
+            }
+            else
+            {
+                await DisplayAlert("Error", "Correo o contraseña incorrectos", "OK");
+            }
+        }
+
+        private async Task<(bool, bool)> ValidarUsuarioAsync(string email, string contrasena)
         {
             try
             {
@@ -120,23 +134,41 @@ namespace ProyectoMotos
                 {
                     await conexion.OpenAsync();
 
-                    string query = "SELECT COUNT(*) FROM users WHERE Email = @user AND Password = @password";
+                    string query = "SELECT Password, Admin FROM users WHERE Email = @user";
                     using (var cmd = new MySqlCommand(query, conexion))
                     {
                         cmd.Parameters.AddWithValue("@user", email);
-                        cmd.Parameters.AddWithValue("@password", contrasena);
 
-                        var resultado = await cmd.ExecuteScalarAsync();
-                        return Convert.ToInt32(resultado) > 0;
+                        using (var reader = await cmd.ExecuteReaderAsync())
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                var dbPassword = reader["Password"].ToString();
+                                var adminValue = reader.GetInt32("Admin"); // Usar GetInt32 para leer como entero directamente
+
+                                bool isAdmin = adminValue == 1;
+                                bool isValidPassword = dbPassword == contrasena;
+
+                                // Mensajes de depuración para ver los valores obtenidos
+                                Debug.WriteLine($"Contraseña de la base de datos: {dbPassword}");
+                                Debug.WriteLine($"Valor de Admin desde la base de datos: {adminValue}");
+                                Debug.WriteLine($"Password correcto: {isValidPassword}, esAdmin: {isAdmin}");
+
+                                return (isValidPassword, isAdmin);
+                            }
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Error", "Error al conectar con la base de datos: " + ex.Message, "OK");
-                return false;
             }
+
+            return (false, false);
         }
+
+
 
         // Método para registrar un nuevo usuario
         private async Task<bool> RegistrarUsuarioAsync(string email, string contrasena)

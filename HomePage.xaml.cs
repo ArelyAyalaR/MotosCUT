@@ -1,20 +1,26 @@
-﻿// HomePage.xaml.cs
-
-namespace ProyectoMotos
+﻿namespace ProyectoMotos
 {
+
     public partial class HomePage : ContentPage
     {
-        public HomePage(string firstName, string lastName, string email)
+        private string _emailUsuario;
+        private string _firstName;
+        private string _lastName;
+
+        public HomePage(string emailUsuario, string firstName, string lastName)
         {
             InitializeComponent();
-            // Mostrar los datos del usuario en el Label de bienvenida
-            welcomeLabel.Text = $"Bienvenido, {firstName} {lastName}!\nCorreo: {email}";
-        }
+            _emailUsuario = emailUsuario;
+            _firstName = firstName;
+            _lastName = lastName;
 
-        // Método para cerrar sesión y regresar a MainPage
+            // Puedes manejar la configuración de la interfaz de usuario en otro método si es necesario
+        }
         private async void OnLogoutClicked(object sender, EventArgs e)
         {
             await Navigation.PopToRootAsync();
         }
     }
+
+
 }

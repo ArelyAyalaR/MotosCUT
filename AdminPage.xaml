@@ -1,0 +1,23 @@
+<!-- AdminPage.xaml -->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoMotos.AdminPage"
+             Title="Página de Administrador">
+    <StackLayout Padding="30" VerticalOptions="Center">
+        <Label Text="Panel de Administrador"
+               FontSize="24"
+               HorizontalOptions="Center"
+               TextColor="#333" />
+
+        <!-- Mostrar los datos del usuario -->
+        <Label Text="Nombre de Usuario:" FontAttributes="Bold" />
+        <Label x:Name="userNameLabel" Text="Cargando..." />
+
+        <Label Text="Correo Electrónico:" FontAttributes="Bold" />
+        <Label x:Name="userEmailLabel" Text="Cargando..." />
+
+        <!-- Puedes agregar aquí otros elementos específicos para administradores -->
+        <Label Text="Sección exclusiva para administradores" FontAttributes="Italic" />
+        <Button Text="Cerrar Sesión" BackgroundColor="#FF3B30" TextColor="White" VerticalOptions="End" Clicked="OnLogoutClicked" />
+    </StackLayout>
+</ContentPage>
