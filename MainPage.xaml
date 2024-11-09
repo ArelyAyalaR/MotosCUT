@@ -1,13 +1,33 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<!-- MainPage.xaml -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ProyectoMotos.MainPage">
+             x:Class="ProyectoMotos.MainPage"
+             Title="Login">
+    <StackLayout Padding="30" VerticalOptions="Center">
+        <Label Text="Bienvenido a Proyecto Motos (Login TestV3)" 
+               FontSize="24"
+               HorizontalOptions="Center" />
 
-    <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
-        </VerticalStackLayout>
-    </ScrollView>
+        <!-- Campo de Entrada de Correo Electrónico -->
+        <Entry x:Name="emailEntry" 
+               Placeholder="Correo Electrónico" 
+               Keyboard="Email" />
 
+        <!-- Campo de Entrada de Contraseña -->
+        <Entry x:Name="passwordEntry" 
+               Placeholder="Contraseña" 
+               IsPassword="True" />
+
+        <!-- Botón de Iniciar Sesión -->
+        <Button Text="Iniciar Sesión" 
+                Clicked="OnLoginClicked"
+                BackgroundColor="#007BFF" 
+                TextColor="White" />
+
+        <!-- Botón de Registrarse -->
+        <Button Text="Registrarse" 
+                Clicked="OnRegisterClicked"
+                BackgroundColor="#28A745" 
+                TextColor="White" />
+    </StackLayout>
 </ContentPage>

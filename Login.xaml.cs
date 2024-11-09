@@ -7,6 +7,7 @@ namespace ProyectoMotos;
 
 public partial class NewPage1 : ContentPage
 {
+    // Actualiza las credenciales aquí según tu configuración
     private string connectionString = "Server=motocut.cfko0iqhcsi0.us-east-1.rds.amazonaws.com;Database=motosv3;User ID=admin;     Password=motoCut$2024DB";
 
     private async void OnLoginClicked(object sender, EventArgs e)
@@ -34,8 +35,7 @@ public partial class NewPage1 : ContentPage
         }
     }
 
-
-    private async Task<bool> ValidarUsuarioAsync(string usuario, string contrasena)
+    private async Task<bool> ValidarUsuarioAsync(string email, string contrasena)
     {
         try
         {
@@ -43,11 +43,12 @@ public partial class NewPage1 : ContentPage
             {
                 await conexion.OpenAsync();
 
-                string query = "SELECT COUNT(*) FROM users WHERE Usuario = @Usuario AND Contrasena = @Contrasena";
+                // Ajuste de la consulta con los nuevos nombres de columna
+                string query = "SELECT COUNT(*) FROM users WHERE Email = @user AND Password = @password";
                 using (var cmd = new MySqlCommand(query, conexion))
                 {
-                    cmd.Parameters.AddWithValue("@Usuario", usuario);
-                    cmd.Parameters.AddWithValue("@Contrasena", contrasena);
+                    cmd.Parameters.AddWithValue("@user", email);
+                    cmd.Parameters.AddWithValue("@password", contrasena);
 
                     var resultado = await cmd.ExecuteScalarAsync();
                     return Convert.ToInt32(resultado) > 0;
@@ -60,7 +61,4 @@ public partial class NewPage1 : ContentPage
             return false;
         }
     }
-
-
-
 }
