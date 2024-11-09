@@ -26,19 +26,66 @@ namespace ProyectoMotos
                 return;
             }
 
-            bool loginExitoso = await ValidarUsuarioAsync(email, password);
+            // Valida al usuario y obtén sus datos
+            var user = await ObtenerDatosUsuarioAsync(email, password);
 
-            if (loginExitoso)
+            if (user != null)
             {
                 await DisplayAlert("Éxito", "Login exitoso", "OK");
-                // Redirige a otra página, por ejemplo:
-                // await Navigation.PushAsync(new HomePage());
+                // Navega a HomePage pasando los datos del usuario
+                await Navigation.PushAsync(new HomePage(user.FirstName, user.LastName, user.Email));
             }
             else
             {
                 await DisplayAlert("Error", "Correo o contraseña incorrectos", "OK");
             }
         }
+
+        // Método para obtener los datos del usuario autenticado
+        private async Task<User?> ObtenerDatosUsuarioAsync(string email, string contrasena)
+        {
+            try
+            {
+                using (var conexion = new MySqlConnection(connectionString))
+                {
+                    await conexion.OpenAsync();
+
+                    string query = "SELECT FirstName, LastName, Email FROM users WHERE Email = @user AND Password = @password";
+                    using (var cmd = new MySqlCommand(query, conexion))
+                    {
+                        cmd.Parameters.AddWithValue("@user", email);
+                        cmd.Parameters.AddWithValue("@password", contrasena);
+
+                        using (var reader = await cmd.ExecuteReaderAsync())
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                return new User
+                                {
+                                    FirstName = reader.GetString(0),
+                                    LastName = reader.GetString(1),
+                                    Email = reader.GetString(2)
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", "Error al conectar con la base de datos: " + ex.Message, "OK");
+            }
+            return null;
+        }
+
+        // Clase auxiliar para almacenar los datos del usuario
+        public class User
+        {
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string Email { get; set; }
+        }
+
 
         // Método para registrarse
         private async void OnRegisterClicked(object sender, EventArgs e)

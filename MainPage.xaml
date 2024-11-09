@@ -29,5 +29,6 @@
                 Clicked="OnRegisterClicked"
                 BackgroundColor="#28A745" 
                 TextColor="White" />
+
     </StackLayout>
 </ContentPage>
