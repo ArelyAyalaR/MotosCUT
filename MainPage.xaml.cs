@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using System.Data;
 using System.Diagnostics;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace ProyectoMotos
 {
@@ -16,6 +18,21 @@ namespace ProyectoMotos
             InitializeComponent();
         }
 
+        public static string EncriptarContrasena(string contrasena)
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(contrasena));
+
+                StringBuilder builder = new StringBuilder();
+                foreach (byte t in bytes)
+                {
+                    builder.Append(t.ToString("x2"));
+                }
+
+                return builder.ToString();
+            }
+        }
 
         // Método para obtener los datos del usuario autenticado
         private async Task<User?> ObtenerDatosUsuarioAsync(string email, string contrasena)
@@ -118,6 +135,9 @@ namespace ProyectoMotos
                 {
                     await conexion.OpenAsync();
 
+         
+                    string contrasenaEncriptada = EncriptarContrasena(contrasena);
+
                     string query = "SELECT Password, Admin FROM users WHERE Email = @user";
                     using (var cmd = new MySqlCommand(query, conexion))
                     {
@@ -128,15 +148,10 @@ namespace ProyectoMotos
                             if (await reader.ReadAsync())
                             {
                                 var dbPassword = reader["Password"].ToString();
-                                var adminValue = reader.GetInt32("Admin"); // Usar GetInt32 para leer como entero directamente
+                                var adminValue = reader.GetInt32("Admin");
 
                                 bool isAdmin = adminValue == 1;
-                                bool isValidPassword = dbPassword == contrasena;
-
-                                // Mensajes de depuración para ver los valores obtenidos
-                                Debug.WriteLine($"Contraseña de la base de datos: {dbPassword}");
-                                Debug.WriteLine($"Valor de Admin desde la base de datos: {adminValue}");
-                                Debug.WriteLine($"Password correcto: {isValidPassword}, esAdmin: {isAdmin}");
+                                bool isValidPassword = dbPassword == contrasenaEncriptada;
 
                                 return (isValidPassword, isAdmin);
                             }
@@ -151,6 +166,8 @@ namespace ProyectoMotos
 
             return (false, false);
         }
+
+
 
 
 

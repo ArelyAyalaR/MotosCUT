@@ -2,6 +2,10 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
+using System.Text;
+
+
 
 namespace ProyectoMotos
 {
@@ -12,6 +16,22 @@ namespace ProyectoMotos
         public RegistroPage()
         {
             InitializeComponent();
+        }
+
+        public static string EncriptarContrasena(string contrasena)
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(contrasena));
+
+                StringBuilder builder = new StringBuilder();
+                foreach (byte t in bytes)
+                {
+                    builder.Append(t.ToString("x2"));
+                }
+
+                return builder.ToString();
+            }
         }
 
         private async void OnRegisterClicked(object sender, EventArgs e)
@@ -49,7 +69,7 @@ namespace ProyectoMotos
         }
 
         private async Task<bool> RegistrarUsuarioYMotocicletaAsync(string firstName, string lastName, string email, string password,
-                                                                  string licensePlate, string model, string brand)
+                                                          string licensePlate, string model, string brand)
         {
             try
             {
@@ -57,14 +77,15 @@ namespace ProyectoMotos
                 {
                     await conexion.OpenAsync();
 
-                    // 1. Insertar usuario y obtener UserID generado
+                    string passwordEncriptada = EncriptarContrasena(password);
+
                     string queryUser = "INSERT INTO users (FirstName, LastName, Email, Password) VALUES (@firstName, @lastName, @email, @password)";
                     using (var cmdUser = new MySqlCommand(queryUser, conexion))
                     {
                         cmdUser.Parameters.AddWithValue("@firstName", firstName);
                         cmdUser.Parameters.AddWithValue("@lastName", lastName);
                         cmdUser.Parameters.AddWithValue("@email", email);
-                        cmdUser.Parameters.AddWithValue("@password", password);
+                        cmdUser.Parameters.AddWithValue("@password", passwordEncriptada);
 
                         int userRowsAffected = await cmdUser.ExecuteNonQueryAsync();
 
@@ -114,6 +135,8 @@ namespace ProyectoMotos
                 return false;
             }
         }
+
+
 
     }
 }
