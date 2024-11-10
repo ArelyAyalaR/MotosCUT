@@ -43,22 +43,30 @@ namespace ProyectoMotos
                 {
                     await conexion.OpenAsync();
 
-                    string query = "SELECT FirstName, LastName, Email FROM users WHERE Email = @user AND Password = @password";
+                    // Consulta SQL para obtener los datos del usuario
+                    string query = "SELECT UsersID, FirstName, LastName, Email, Password FROM users WHERE Email = @user";
                     using (var cmd = new MySqlCommand(query, conexion))
                     {
                         cmd.Parameters.AddWithValue("@user", email);
-                        cmd.Parameters.AddWithValue("@password", contrasena);
 
                         using (var reader = await cmd.ExecuteReaderAsync())
                         {
                             if (await reader.ReadAsync())
                             {
-                                return new User
+                                string dbPassword = reader["Password"].ToString();
+                                bool isValidPassword = dbPassword == EncriptarContrasena(contrasena); // Validamos la contraseña
+
+                                if (isValidPassword)
                                 {
-                                    FirstName = reader.GetString(0),
-                                    LastName = reader.GetString(1),
-                                    Email = reader.GetString(2)
-                                };
+                                    // Devolvemos los datos del usuario si la contraseña es válida
+                                    return new User
+                                    {
+                                        UserID = reader.GetInt32(0),
+                                        FirstName = reader.GetString(1),
+                                        LastName = reader.GetString(2),
+                                        Email = reader.GetString(3)
+                                    };
+                                }
                             }
                         }
                     }
@@ -68,12 +76,14 @@ namespace ProyectoMotos
             {
                 await DisplayAlert("Error", "Error al conectar con la base de datos: " + ex.Message, "OK");
             }
-            return null;
+            return null; // Si no encontramos al usuario o la contraseña es incorrecta
         }
+
 
         // Clase auxiliar para almacenar los datos del usuario
         public class User
         {
+            public int UserID { get; set; }  // Agregar la propiedad UserID
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public string Email { get; set; }
@@ -99,26 +109,33 @@ namespace ProyectoMotos
                 return;
             }
 
-            var (loginExitoso, esAdmin) = await ValidarUsuarioAsync(email, password);
+            var usuario = await ObtenerDatosUsuarioAsync(email, password);
 
-            // Depuración: Verificar valores de loginExitoso y esAdmin
-            Debug.WriteLine($"Login exitoso: {loginExitoso}, esAdmin: {esAdmin}");
-
-            if (loginExitoso)
+            if (usuario != null)
             {
                 await DisplayAlert("Éxito", "Login exitoso", "OK");
 
-                if (esAdmin)
+                // Ejecutar la consulta con el userID
+                await EjecutarConsultaQR(usuario.UserID);
+
+                // Verificar si el usuario es Admin
+                var (loginExitoso, esAdmin) = await ValidarUsuarioAsync(email, password);
+
+                // Depuración: Verificar valores de loginExitoso y esAdmin
+                Debug.WriteLine($"Login exitoso: {loginExitoso}, esAdmin: {esAdmin}");
+
+                if (loginExitoso)
                 {
-                    // Depuración: Verificar que la condición esAdmin está funcionando
-                    Debug.WriteLine("Usuario es Admin. Navegando a AdminPage");
-                    await Navigation.PushAsync(new AdminPage(email, "", ""));
-                }
-                else
-                {
-                    // Depuración: Verificar que la condición esAdmin está funcionando
-                    Debug.WriteLine("Usuario NO es Admin. Navegando a HomePage");
-                    await Navigation.PushAsync(new HomePage(email, "", ""));  //Aqui 
+                    if (esAdmin)
+                    {
+                        Debug.WriteLine("Usuario es Admin. Navegando a AdminPage");
+                        await Navigation.PushAsync(new AdminPage(email, "", ""));
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Usuario NO es Admin. Navegando a HomePage");
+                        await Navigation.PushAsync(new HomePage(email, usuario.FirstName, usuario.LastName, usuario.UserID));  // Pasamos el userID
+                    }
                 }
             }
             else
@@ -126,6 +143,44 @@ namespace ProyectoMotos
                 await DisplayAlert("Error", "Correo o contraseña incorrectos", "OK");
             }
         }
+        private async Task EjecutarConsultaQR(int userID)
+        {
+            try
+            {
+                using (var conexion = new MySqlConnection(connectionString))
+                {
+                    await conexion.OpenAsync();
+
+                    // Aquí usamos el UserID para realizar la consulta
+                    string query = "SELECT qrcode.QrID, users.UsersID, users.FirstName, users.LastName, users.Email, " +
+                                   "motorcycles.LicencePlate, motorcycles.Model, motorcycles.Brand " +
+                                   "FROM qrcode " +
+                                   "JOIN users ON qrcode.UserID = users.UsersID " +
+                                   "JOIN motorcycles ON qrcode.LicencePlate = motorcycles.LicencePlate " +
+                                   "WHERE qrcode.UserID = @userID";
+
+                    using (var cmd = new MySqlCommand(query, conexion))
+                    {
+                        cmd.Parameters.AddWithValue("@userID", userID);
+
+                        using (var reader = await cmd.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                // Procesamos los resultados, por ejemplo, mostramos los datos en consola o en la interfaz
+                                Debug.WriteLine($"QR ID: {reader.GetInt32(0)}, Usuario: {reader.GetString(2)} {reader.GetString(3)}");
+                                Debug.WriteLine($"Moto: {reader.GetString(6)} - {reader.GetString(7)}");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", "Error al ejecutar la consulta del QR: " + ex.Message, "OK");
+            }
+        }
+
 
         private async Task<(bool, bool)> ValidarUsuarioAsync(string email, string contrasena)
         {

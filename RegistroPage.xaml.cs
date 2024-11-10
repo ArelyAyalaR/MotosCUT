@@ -4,8 +4,7 @@ using System;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.Text;
-
-
+using System.Text.RegularExpressions;
 
 namespace ProyectoMotos
 {
@@ -23,15 +22,18 @@ namespace ProyectoMotos
             using (SHA256 sha256Hash = SHA256.Create())
             {
                 byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(contrasena));
-
                 StringBuilder builder = new StringBuilder();
                 foreach (byte t in bytes)
                 {
                     builder.Append(t.ToString("x2"));
                 }
-
                 return builder.ToString();
             }
+        }
+
+        private bool EsDominioValido(string email)
+        {
+            return Regex.IsMatch(email, @"^[^@\s]+@(alumnos\.udg\.mx|cutonala\.udg\.mx|academicos\.udg\.mx)$");
         }
 
         private async void OnRegisterClicked(object sender, EventArgs e)
@@ -50,6 +52,13 @@ namespace ProyectoMotos
                 string.IsNullOrEmpty(licensePlate) || string.IsNullOrEmpty(model) || string.IsNullOrEmpty(brand))
             {
                 await DisplayAlert("Error", "Por favor complete todos los campos", "OK");
+                return;
+            }
+
+            // Validar que el dominio del correo sea válido
+            if (!EsDominioValido(email))
+            {
+                await DisplayAlert("Error", "El dominio del correo no es válido. Usa un correo de UDG.", "OK");
                 return;
             }
 
@@ -135,8 +144,5 @@ namespace ProyectoMotos
                 return false;
             }
         }
-
-
-
     }
 }
