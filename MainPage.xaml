@@ -1,13 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ProyectoMotos.MainPage">
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+             x:Class="ProyectoMotos.MainPage"
+             Title="Página Principal">
 
-    <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
-        </VerticalStackLayout>
-    </ScrollView>
+    <StackLayout Padding="30">
+        <Label Text="Bienvenido a la página principal"
+               FontSize="24"
+               HorizontalOptions="Center"
+               VerticalOptions="CenterAndExpand" />
+
+        <!-- QR Code, inicialmente oculto -->
+        <zxing:BarcodeGeneratorView
+            x:Name="BarcodeView"
+            HeightRequest="150"
+            WidthRequest="700"
+            ForegroundColor="DarkBlue"
+            Format="QrCode"
+            Margin="1"
+            IsVisible="False" />
+
+        <Button Text="Cerrar sesión"
+                Clicked="OnLogoutClicked"
+                HorizontalOptions="Center"
+                VerticalOptions="EndAndExpand" />
+    </StackLayout>
 
 </ContentPage>
