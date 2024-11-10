@@ -57,7 +57,7 @@ namespace ProyectoMotos
                 {
                     await conexion.OpenAsync();
 
-                    // Registrar el usuario
+                    // 1. Insertar usuario y obtener UserID generado
                     string queryUser = "INSERT INTO users (FirstName, LastName, Email, Password) VALUES (@firstName, @lastName, @email, @password)";
                     using (var cmdUser = new MySqlCommand(queryUser, conexion))
                     {
@@ -68,27 +68,40 @@ namespace ProyectoMotos
 
                         int userRowsAffected = await cmdUser.ExecuteNonQueryAsync();
 
-                        // Verificar que el usuario se haya registrado
                         if (userRowsAffected == 0)
-                        {
                             return false;
+
+                        int userID = (int)cmdUser.LastInsertedId;
+
+                        // 2. Registrar la moto con UserID asociado
+                        string queryMoto = "INSERT INTO motorcycles (LicencePlate, Model, Brand) VALUES (@licensePlate, @model, @brand)";
+                        using (var cmdMoto = new MySqlCommand(queryMoto, conexion))
+                        {
+                            cmdMoto.Parameters.AddWithValue("@licensePlate", licensePlate);
+                            cmdMoto.Parameters.AddWithValue("@model", model);
+                            cmdMoto.Parameters.AddWithValue("@brand", brand);
+
+                            int motoRowsAffected = await cmdMoto.ExecuteNonQueryAsync();
+
+                            if (motoRowsAffected == 0)
+                                return false;
                         }
-                    }
 
-                    // Registrar la moto
-                    string queryMoto = "INSERT INTO motorcycles (LicencePlate, Model, Brand) VALUES (@licensePlate, @model, @brand)";
-                    using (var cmdMoto = new MySqlCommand(queryMoto, conexion))
-                    {
-                        cmdMoto.Parameters.AddWithValue("@licensePlate", licensePlate);
-                        cmdMoto.Parameters.AddWithValue("@model", model);
-                        cmdMoto.Parameters.AddWithValue("@brand", brand);
-
-                        int motoRowsAffected = await cmdMoto.ExecuteNonQueryAsync();
-
-                        // Verificar que la moto se haya registrado
-                        if (motoRowsAffected == 0)
+                        // 3. Asociar usuario y moto en tabla qrcode (si es necesario)
+                        string queryQRCode = "INSERT INTO qrcode (UserID, FirstName, LastName, LicencePlate, Brand) " +
+                                             "VALUES (@userID, @firstName, @lastName, @licensePlate, @brand)";
+                        using (var cmdQRCode = new MySqlCommand(queryQRCode, conexion))
                         {
-                            return false;
+                            cmdQRCode.Parameters.AddWithValue("@userID", userID);
+                            cmdQRCode.Parameters.AddWithValue("@firstName", firstName);
+                            cmdQRCode.Parameters.AddWithValue("@lastName", lastName);
+                            cmdQRCode.Parameters.AddWithValue("@licensePlate", licensePlate);
+                            cmdQRCode.Parameters.AddWithValue("@brand", brand);
+
+                            int qrRowsAffected = await cmdQRCode.ExecuteNonQueryAsync();
+
+                            if (qrRowsAffected == 0)
+                                return false;
                         }
                     }
 
@@ -101,5 +114,6 @@ namespace ProyectoMotos
                 return false;
             }
         }
+
     }
 }
