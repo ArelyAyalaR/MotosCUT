@@ -67,13 +67,13 @@ namespace ProyectoMotos
                         {
                             if (await reader.ReadAsync())
                             {
-                                // Ejemplo: muestra el resultado en una alerta (puedes personalizar esto)
-                                string result = $"QR ID: {reader["QrID"]}\n" +
-                                                $"Usuario: {reader["FirstName"]} {reader["LastName"]}\n" +
-                                                $"Email: {reader["Email"]}\n" +
-                                                $"Moto: {reader["LicencePlate"]}, {reader["Model"]}, {reader["Brand"]}";
+                                // Concatenar los datos en una cadena de texto para el QR
+                                string qrData = $"QR ID: {reader["QrID"]}\n" +
+                                                   $"Usuario: {reader["FirstName"]} {reader["LastName"]}\n" +
+                                                   $"Email: {reader["Email"]}\n" +
+                                                   $"Moto: {reader["LicencePlate"]}, {reader["Model"]}, {reader["Brand"]}";
 
-                                await DisplayAlert("Datos de Usuario", result, "OK");
+                                await Navigation.PushAsync(new QrPage(qrData));
                             }
                             else
                             {

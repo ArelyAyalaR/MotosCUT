@@ -1,0 +1,21 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+             x:Class="ProyectoMotos.QrPage"
+             Title="Código QR">
+    <StackLayout Padding="30" VerticalOptions="Center" HorizontalOptions="Center">
+        <Label Text="Código QR generado" FontSize="24" HorizontalOptions="Center" TextColor="#333" />
+
+        <!-- Control del código QR -->
+        <zxing:BarcodeGeneratorView
+            x:Name="BarcodeView"
+            HeightRequest="200"
+            WidthRequest="200"
+            ForegroundColor="DarkBlue"
+            Format="QrCode"
+            Margin="10"/>
+
+        <Button Text="Cerrar" Clicked="OnCloseClicked" BackgroundColor="#FF3B30" TextColor="White" />
+    </StackLayout>
+</ContentPage>
+
