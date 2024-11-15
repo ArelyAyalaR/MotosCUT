@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui;assembly=ZXing.Net.Maui"
              x:Class="ProyectoMotos.CameraPage"
              Title="Escanear QR"
              BackgroundColor="#F5F5F5">
-    <StackLayout Padding="20" VerticalOptions="Center">
+    <StackLayout Padding="20" VerticalOptions="FillAndExpand">
+
         <!-- Título -->
         <Label 
             Text="Escanear QR" 
@@ -22,31 +24,32 @@
             VerticalOptions="Center"
             Margin="0,10,0,20" />
 
-        <!-- Imagen de un QR o un marco simulado -->
+        <!-- Vista de la cámara para escaneo -->
         <Frame 
             BorderColor="#333"
             CornerRadius="8"
-            HeightRequest="200"
-            WidthRequest="200"
+            HeightRequest="300"
+            WidthRequest="300"
             HorizontalOptions="Center"
             VerticalOptions="Center">
-            <Image 
-                Source="qr_placeholder.png" 
-                Aspect="AspectFit"
-                HorizontalOptions="Center"
-                VerticalOptions="Center" />
+            <zxing:CameraBarcodeReaderView
+                x:Name="BarcodeReader"
+                VerticalOptions="FillAndExpand"
+                HorizontalOptions="FillAndExpand"
+                BarcodeDetected="OnBarcodeDetected" />
         </Frame>
 
         <!-- Botón de acción -->
         <Button 
-            Text="Iniciar Escaneo"
-            BackgroundColor="#4CAF50"
+            Text="Detener Escaneo"
+            BackgroundColor="#FF3B30"
             TextColor="White"
             FontSize="18"
             Margin="0,30,0,0"
             HeightRequest="50"
             CornerRadius="10"
             HorizontalOptions="Center"
-            VerticalOptions="End" />
+            VerticalOptions="End"
+            Clicked="OnStopScanningClicked" />
     </StackLayout>
 </ContentPage>
