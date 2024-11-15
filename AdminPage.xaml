@@ -18,6 +18,7 @@
 
         <!-- Puedes agregar aquí otros elementos específicos para administradores -->
         <Label Text="Sección exclusiva para administradores" FontAttributes="Italic" />
+        <Button Text="Escanear QR" BackgroundColor="LightGreen" TextColor="White" VerticalOptions="End" Clicked="OnCamera" />
         <Button Text="Cerrar Sesión" BackgroundColor="#FF3B30" TextColor="White" VerticalOptions="End" Clicked="OnLogoutClicked" />
     </StackLayout>
 </ContentPage>

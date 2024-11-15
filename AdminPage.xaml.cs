@@ -27,6 +27,11 @@ namespace ProyectoMotos
         {
             await Navigation.PopToRootAsync();
         }
+
+        private async void OnCamera(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new CameraPage());
+        }
     }
 
 }
