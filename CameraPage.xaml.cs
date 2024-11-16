@@ -4,10 +4,10 @@ namespace ProyectoMotos;
 
 public partial class CameraPage : ContentPage
 {
-	public CameraPage()
-	{
-		InitializeComponent();
-	}
+    public CameraPage()
+    {
+        InitializeComponent();
+    }
 
     private async void OnLogoutClicked(object sender, EventArgs e)
     {
@@ -16,9 +16,19 @@ public partial class CameraPage : ContentPage
 
     private void CameraBarcodeReaderView_BarcodesDetected(object sender, ZXing.Net.Maui.BarcodeDetectionEventArgs e)
     {
-       // Dispatcher.Dispatch(() => {
+        foreach (var barcode in e.Results)
+        {
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await DisplayAlert("Código QR Detectado", barcode.Value, "OK");
 
-         //   BarcodeResult.Text = $"{e.Results[0].Value} {e.Results[0].Format}"; 
-        //});
+                CameraReader.IsDetecting = false;
+            });
+        }
+    }
+
+    private void OnStartScanClicked(object sender, EventArgs e)
+    {
+        CameraReader.IsDetecting = true;
     }
 }

@@ -27,15 +27,15 @@
         <Frame 
             BorderColor="#333"
             CornerRadius="8"
-            HeightRequest="200"
-            WidthRequest="200"
+            HeightRequest="400"
+            WidthRequest="400"
             HorizontalOptions="Center"
             VerticalOptions="Center">
             <zxing:CameraBarcodeReaderView 
+             x:Name="CameraReader"
              IsDetecting="True"
              IsTorchOn="True" 
-             BarcodesDetected="CameraBarcodeReaderView_BarcodesDetected"/>
-
+             BarcodesDetected="CameraBarcodeReaderView_BarcodesDetected" />
         </Frame>
 
         <!-- Botón de acción -->
@@ -48,7 +48,8 @@
             HeightRequest="50"
             CornerRadius="10"
             HorizontalOptions="Center"
-            VerticalOptions="End" />
+            VerticalOptions="End"
+            Clicked="OnStartScanClicked" />
 
         <Button Text="Cerrar Sesión" 
             BackgroundColor="#FF3B30" 
