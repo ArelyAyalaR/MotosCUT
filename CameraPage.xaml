@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
              x:Class="ProyectoMotos.CameraPage"
              Title="Escanear QR"
              BackgroundColor="#F5F5F5">
@@ -30,11 +31,11 @@
             WidthRequest="200"
             HorizontalOptions="Center"
             VerticalOptions="Center">
-            <Image 
-                Source="qr_placeholder.png" 
-                Aspect="AspectFit"
-                HorizontalOptions="Center"
-                VerticalOptions="Center" />
+            <zxing:CameraBarcodeReaderView 
+             IsDetecting="True"
+             IsTorchOn="True" 
+             BarcodesDetected="CameraBarcodeReaderView_BarcodesDetected"/>
+
         </Frame>
 
         <!-- Botón de acción -->

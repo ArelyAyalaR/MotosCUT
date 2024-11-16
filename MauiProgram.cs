@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using ZXing.Net.Maui.Controls;
+using ZXing.Net.Maui;
 
 namespace ProyectoMotos
 {
