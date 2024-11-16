@@ -48,5 +48,11 @@
             CornerRadius="10"
             HorizontalOptions="Center"
             VerticalOptions="End" />
+
+        <Button Text="Cerrar Sesión" 
+            BackgroundColor="#FF3B30" 
+            TextColor="White" 
+            VerticalOptions="End" 
+            Clicked="OnLogoutClicked" />
     </StackLayout>
 </ContentPage>

@@ -6,4 +6,9 @@ public partial class CameraPage : ContentPage
 	{
 		InitializeComponent();
 	}
+
+    private async void OnLogoutClicked(object sender, EventArgs e)
+    {
+        await Navigation.PopToRootAsync();
+    }
 }
