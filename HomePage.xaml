@@ -1,15 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
              x:Class="ProyectoMotos.HomePage"
-             Title="Página de Inicio">
-    
-    <StackLayout Padding="30" VerticalOptions="Center" HorizontalOptions="Center">
-        <Label Text="Bienvenido a Proyecto Motos" FontSize="24" HorizontalOptions="Center" TextColor="#333" />
-        <Label x:Name="welcomeLabel" FontSize="18" HorizontalOptions="Center" TextColor="#333" Margin="0,20,0,0" />
+             Title="Inicio"
+             BackgroundColor="#f3f4f6">
 
-        <Button Text="Cerrar Sesión" BackgroundColor="#FF3B30" TextColor="White" VerticalOptions="End" Clicked="OnLogoutClicked" />
-        <Button Text="Generar QR" BackgroundColor="#007AFF" TextColor="White" VerticalOptions="Center" Clicked="OnInsertTextClicked" />
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="30" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
 
-    </StackLayout>
+            <!-- Título de bienvenida
+            <Label Text="Bienvenido a Proyecto Motos"
+                   FontSize="30"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="#1a73e8" />
+            -->
+
+            <!-- Subtítulo dinámico -->
+            <Label x:Name="welcomeLabel"
+                   Text="¡Estamos encantados de tenerte aquí!"
+                   FontSize="18"
+                   TextColor="#555"
+                   HorizontalTextAlignment="Center"
+                   Margin="0,10,0,0" />
+
+            <!-- Botón para generar QR -->
+            <Button Text="Generar QR"
+                    BackgroundColor="#007AFF"
+                    TextColor="White"
+                    FontSize="18"
+                    CornerRadius="10"
+                    Padding="10"
+                    HeightRequest="50"
+                    HorizontalOptions="FillAndExpand"
+                    Clicked="OnInsertTextClicked" />
+
+            <!-- Botón para cerrar sesión -->
+            <Button Text="Cerrar Sesión"
+                    BackgroundColor="#FF3B30"
+                    TextColor="White"
+                    FontSize="18"
+                    CornerRadius="10"
+                    Padding="10"
+                    HeightRequest="50"
+                    HorizontalOptions="FillAndExpand"
+                    Clicked="OnLogoutClicked" />
+
+        </StackLayout>
+    </ScrollView>
 </ContentPage>

@@ -1,21 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
              x:Class="ProyectoMotos.QrPage"
-             Title="Código QR">
-    <StackLayout Padding="30" VerticalOptions="Center" HorizontalOptions="Center">
-        <Label Text="Código QR generado" FontSize="24" HorizontalOptions="Center" TextColor="#333" />
+             Title="Código QR"
+             BackgroundColor="#f3f4f6">
 
-        <!-- Control del código QR -->
-        <zxing:BarcodeGeneratorView
-            x:Name="BarcodeView"
-            HeightRequest="200"
-            WidthRequest="200"
-            ForegroundColor="DarkBlue"
-            Format="QrCode"
-            Margin="10"/>
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="20" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
 
-        <Button Text="Cerrar" Clicked="OnCloseClicked" BackgroundColor="#FF3B30" TextColor="White" />
-    </StackLayout>
+            <!-- Título de la página -->
+            <Label Text="Código QR"
+                   FontSize="24"
+                   FontAttributes="Italic"
+                   HorizontalOptions="Center"
+                   TextColor="#333" />
+
+            <!-- Contenedor del QR -->
+            <Frame BackgroundColor="White"
+                   CornerRadius="15"
+                   Padding="30"
+                   HasShadow="True"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   Margin="0,20">
+                <zxing:BarcodeGeneratorView
+                    x:Name="BarcodeView"
+                    HeightRequest="200"
+                    WidthRequest="200"
+                    ForegroundColor="#1a73e8"
+                    Format="QrCode" />
+            </Frame>
+
+            <!-- Botón de cierre -->
+            <Button Text="Cerrar"
+                    BackgroundColor="#FF3B30"
+                    TextColor="White"
+                    FontSize="18"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    HorizontalOptions="FillAndExpand"
+                    Clicked="OnCloseClicked" />
+
+        </StackLayout>
+    </ScrollView>
 </ContentPage>
-

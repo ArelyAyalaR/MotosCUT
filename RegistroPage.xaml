@@ -2,42 +2,96 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="ProyectoMotos.RegistroPage"
-             BackgroundColor="{DynamicResource PageBackgroundColor}">
+             Title="Registro"
+             BackgroundColor="#f3f4f6">
 
-	<StackLayout Padding="10">
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="20" VerticalOptions="CenterAndExpand">
 
-		<!-- Título de la página -->
-		<Label Text="Página de Registro"
-               HorizontalOptions="Center"
-               VerticalOptions="CenterAndExpand"
-               FontSize="24" />
+            <!-- Título principal -->
+            <Label Text="Registro"
+                   FontSize="26"
+                   FontAttributes="Italic"
+                   HorizontalOptions="Center"
+                   TextColor="#1a73e8" />
 
-		<!-- Datos de usuario -->
-		<Label Text="Nombre" />
-		<Entry x:Name="firstNameEntry" Placeholder="Ingrese su nombre" />
+            <!-- Sección de datos personales -->
+            <Frame BackgroundColor="White"
+                   CornerRadius="10"
+                   Padding="15"
+                   HasShadow="True">
+                <StackLayout Spacing="15">
 
-		<Label Text="Apellido" />
-		<Entry x:Name="lastNameEntry" Placeholder="Ingrese su apellido" />
+                    <Label Text="Datos personales"
+                           FontSize="18"
+                           FontAttributes="Italic"
+                           TextColor="#777"
+                           Margin="0,0,0,10" />
 
-		<Label Text="Correo electrónico" />
-		<Entry x:Name="emailEntry" Placeholder="Ingrese su correo electrónico" Keyboard="Email" />
+                    <Entry x:Name="firstNameEntry"
+                           Placeholder="Nombre"
+                           FontSize="14"
+                           TextColor="#333" />
 
-		<Label Text="Contraseña" />
-		<Entry x:Name="passwordEntry" Placeholder="Ingrese su contraseña" IsPassword="True" />
+                    <Entry x:Name="lastNameEntry"
+                           Placeholder="Apellido"
+                           FontSize="14"
+                           TextColor="#333" />
 
-		<!-- Datos de la motocicleta -->
-		<Label Text="Placa de la moto" />
-		<Entry x:Name="licensePlateEntry" Placeholder="Ingrese la placa de la moto" />
+                    <Entry x:Name="emailEntry"
+                           Placeholder="Correo electrónico"
+                           Keyboard="Email"
+                           FontSize="14"
+                           TextColor="#333" />
 
-		<Label Text="Modelo de la moto" />
-		<Entry x:Name="modelEntry" Placeholder="Ingrese el modelo de la moto" />
+                    <Entry x:Name="passwordEntry"
+                           Placeholder="Contraseña"
+                           IsPassword="True"
+                           FontSize="14"
+                           TextColor="#333" />
+                </StackLayout>
+            </Frame>
 
-		<Label Text="Marca de la moto" />
-		<Entry x:Name="brandEntry" Placeholder="Ingrese la marca de la moto" />
+            <!-- Sección de datos de la motocicleta -->
+            <Frame BackgroundColor="White"
+                   CornerRadius="10"
+                   Padding="15"
+                   HasShadow="True">
+                <StackLayout Spacing="15">
 
-		<!-- Botón para registrar -->
-		<Button Text="Registrar" Clicked="OnRegisterClicked" />
+                    <Label Text="Datos de la motocicleta"
+                           FontSize="18"
+                           FontAttributes="Italic"
+                           TextColor="#777"
+                           Margin="0,0,0,10" />
 
-	</StackLayout>
+                    <Entry x:Name="licensePlateEntry"
+                           Placeholder="Placa de la moto"
+                           FontSize="14"
+                           TextColor="#333" />
 
+                    <Entry x:Name="modelEntry"
+                           Placeholder="Modelo de la moto"
+                           FontSize="14"
+                           TextColor="#333" />
+
+                    <Entry x:Name="brandEntry"
+                           Placeholder="Marca de la moto"
+                           FontSize="14"
+                           TextColor="#333" />
+                </StackLayout>
+            </Frame>
+
+            <!-- Botón para registrar -->
+            <Button Text="Registrar"
+                    BackgroundColor="#007AFF"
+                    TextColor="White"
+                    FontSize="18"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    HorizontalOptions="FillAndExpand"
+                    Clicked="OnRegisterClicked" />
+
+        </StackLayout>
+    </ScrollView>
 </ContentPage>

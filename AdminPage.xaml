@@ -1,24 +1,76 @@
-<!-- AdminPage.xaml -->
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ProyectoMotos.AdminPage"
-             Title="Página de Administrador">
-    <StackLayout Padding="30" VerticalOptions="Center">
-        <Label Text="Panel de Administrador"
-               FontSize="24"
-               HorizontalOptions="Center"
-               TextColor="#333" />
+             Title="Administrador"
+             BackgroundColor="#f3f4f6">
 
-        <!-- Mostrar los datos del usuario -->
-        <Label Text="Nombre de Usuario:" FontAttributes="Bold" />
-        <Label x:Name="userNameLabel" Text="Cargando..." />
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="20" VerticalOptions="FillAndExpand">
 
-        <Label Text="Correo Electrónico:" FontAttributes="Bold" />
-        <Label x:Name="userEmailLabel" Text="Cargando..." />
+            <!-- Título de la página -->
+            <Label Text="Panel de Administrador"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="#1a73e8" />
 
-        <!-- Puedes agregar aquí otros elementos específicos para administradores -->
-        <Label Text="Sección exclusiva para administradores" FontAttributes="Italic" />
-        <Button Text="Escanear QR" BackgroundColor="LightGreen" TextColor="White" VerticalOptions="End" Clicked="OnCamera" />
-        <Button Text="Cerrar Sesión" BackgroundColor="#FF3B30" TextColor="White" VerticalOptions="End" Clicked="OnLogoutClicked" />
-    </StackLayout>
+            <!-- Datos del usuario -->
+            <Frame BackgroundColor="White"
+                   CornerRadius="10"
+                   Padding="15"
+                   HasShadow="True">
+                <StackLayout Spacing="10">
+                    <Label Text="Nombre de Usuario"
+                           FontAttributes="Bold"
+                           TextColor="#555"
+                           FontSize="16" />
+                    <Label x:Name="userNameLabel"
+                           Text="Cargando..."
+                           FontSize="16"
+                           TextColor="#333" />
+
+                    <Label Text="Correo Electrónico"
+                           FontAttributes="Bold"
+                           TextColor="#555"
+                           FontSize="16" />
+                    <Label x:Name="userEmailLabel"
+                           Text="Cargando..."
+                           FontSize="16"
+                           TextColor="#333" />
+                </StackLayout>
+            </Frame>
+
+            <!-- Sección informativa -->
+            <Frame BackgroundColor="#e7f0fd"
+                   CornerRadius="10"
+                   Padding="15"
+                   HasShadow="False">
+                <Label Text="Sección exclusiva para administradores"
+                       FontAttributes="Italic"
+                       FontSize="16"
+                       TextColor="#1a73e8"
+                       HorizontalTextAlignment="Center" />
+            </Frame>
+
+            <!-- Botones de acción -->
+            <StackLayout Spacing="15">
+                <Button Text="Escanear QR"
+                        BackgroundColor="#4caf50"
+                        TextColor="White"
+                        FontSize="18"
+                        CornerRadius="10"
+                        HeightRequest="50"
+                        Clicked="OnCamera" />
+
+                <Button Text="Cerrar Sesión"
+                        BackgroundColor="#FF3B30"
+                        TextColor="White"
+                        FontSize="18"
+                        CornerRadius="10"
+                        HeightRequest="50"
+                        Clicked="OnLogoutClicked" />
+            </StackLayout>
+        </StackLayout>
+    </ScrollView>
 </ContentPage>
