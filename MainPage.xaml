@@ -1,34 +1,54 @@
-﻿<!-- MainPage.xaml -->
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ProyectoMotos.MainPage"
-             Title="Login">
-    <StackLayout Padding="30" VerticalOptions="Center">
+             Title="Login"
+             BackgroundColor="#F4F4F4">
+    <!-- Fondo claro para la página -->
+    <StackLayout Padding="30" Spacing="20" VerticalOptions="Center">
+        <!-- Título de la página -->
         <Label Text="Bienvenido a Proyecto Motos (Login TestV3)" 
                FontSize="24"
-               HorizontalOptions="Center" />
+               FontAttributes="Bold"
+               HorizontalOptions="Center" 
+               TextColor="#2C3E50" />
+        <!-- Título en color oscuro -->
 
         <!-- Campo de Entrada de Correo Electrónico -->
         <Entry x:Name="emailEntry" 
                Placeholder="Correo Electrónico" 
-               Keyboard="Email" />
+               Keyboard="Email"
+               TextColor="#34495E" 
+               BackgroundColor="#ECF0F1"
+               HeightRequest="50"
+               />
 
         <!-- Campo de Entrada de Contraseña -->
         <Entry x:Name="passwordEntry" 
                Placeholder="Contraseña" 
-               IsPassword="True" />
+               IsPassword="True"
+               TextColor="#34495E" 
+               BackgroundColor="#ECF0F1"
+               HeightRequest="50"
+               />
 
         <!-- Botón de Iniciar Sesión -->
         <Button Text="Iniciar Sesión" 
                 Clicked="OnLoginClicked"
                 BackgroundColor="#007BFF" 
-                TextColor="White" />
+                TextColor="White"
+                HeightRequest="50"
+                CornerRadius="25"
+                Margin="0,20,0,0"/>
 
         <!-- Botón de Registrarse -->
         <Button Text="Registrarse" 
                 Clicked="OnRegisterClicked"
                 BackgroundColor="#28A745" 
-                TextColor="White" />
+                TextColor="White"
+                HeightRequest="50"
+                CornerRadius="25"
+                Margin="0,20,0,0"/>
 
     </StackLayout>
 </ContentPage>

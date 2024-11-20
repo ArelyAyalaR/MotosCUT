@@ -42,19 +42,20 @@
                 BarcodesDetected="CameraBarcodeReaderView_BarcodesDetected" />
         </Frame>
 
-        <!-- Botón para iniciar el escaneo
+        <!-- Botón para iniciar el escaneo -->
         <Button 
-            Text="Iniciar Escaneo"
+            Text="Escanear de nuevo"
             BackgroundColor="#4CAF50"
             TextColor="White"
             FontSize="16"
             CornerRadius="10"
             HeightRequest="50"
             HorizontalOptions="FillAndExpand"
-            Clicked="OnStartScanClicked" />
-        -->
+            Clicked="OnScanAgainClicked" />
+        
         
         <!-- Botón para cerrar sesión -->
+
         <Button 
             Text="Cerrar Sesión" 
             BackgroundColor="#FF3B30" 
