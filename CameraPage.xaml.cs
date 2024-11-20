@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using System.Diagnostics;
 using ZXing.Net.Maui;
 
@@ -5,8 +6,8 @@ namespace ProyectoMotos
 {
     public partial class CameraPage : ContentPage
     {
-        private bool isProcessing = false; 
-        private string qrCodeData; 
+        private bool isProcessing = false;
+        private string qrCodeData;
 
         public CameraPage()
         {
@@ -20,23 +21,37 @@ namespace ProyectoMotos
 
         private void CameraBarcodeReaderView_BarcodesDetected(object sender, ZXing.Net.Maui.BarcodeDetectionEventArgs e)
         {
-            if (isProcessing) return; 
+            if (isProcessing) return;
 
-            isProcessing = true; 
+            isProcessing = true;
 
             foreach (var barcode in e.Results)
             {
                 Device.BeginInvokeOnMainThread(async () =>
                 {
-                    qrCodeData = barcode.Value;
+                    qrCodeData = barcode.Value; 
 
                     await DisplayAlert("Código QR Detectado", qrCodeData, "OK");
 
                     CameraReader.IsDetecting = false; 
-                    isProcessing = false;
+                    isProcessing = false; 
+
                     if (!string.IsNullOrEmpty(qrCodeData))
                     {
-                        Debug.WriteLine($"El código QR es: {qrCodeData}");
+                        var qrIdMatch = Regex.Match(qrCodeData, @"QR ID:\s*(\d+)");
+
+                        if (qrIdMatch.Success)
+                        {
+                            string qrId = qrIdMatch.Groups[1].Value;
+                            Debug.WriteLine($"El QR ID es: {qrId}");
+
+                            Console.WriteLine($"El QR ID es: {qrId}");
+
+                        }
+                        else
+                        {
+                            Debug.WriteLine("No se encontró un QR ID en el código QR.");
+                        }
                     }
                     else
                     {
@@ -48,21 +63,13 @@ namespace ProyectoMotos
 
         private void OnStartScanClicked(object sender, EventArgs e)
         {
-            CameraReader.IsDetecting = true;
-            isProcessing = false;
+            CameraReader.IsDetecting = true;  
+            isProcessing = false; 
         }
 
-        private void UseQRCodeData()
+        private void GetDataByQRId(string qrId)
         {
-            if (!string.IsNullOrEmpty(qrCodeData))
-            {
-
-                Console.WriteLine($"El código QR es: {qrCodeData}");
-            }
-            else
-            {
-                Console.WriteLine("No se ha detectado ningún código QR.");
-            }
+            Console.WriteLine($"Obteniendo información para el QR ID: {qrId}");
         }
     }
 }
