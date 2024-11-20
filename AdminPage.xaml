@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ProyectoMotos.AdminPage"
@@ -21,11 +20,23 @@
                    Padding="15"
                    HasShadow="True">
                 <StackLayout Spacing="10">
-                    <Label Text="Nombre de Usuario"
+                    <Label Text="Nombre del Usuario"
                            FontAttributes="Bold"
                            TextColor="#555"
                            FontSize="16" />
-                    <Label x:Name="userNameLabel"
+
+                    <!-- Separamos nombre y apellido -->
+                    <Label x:Name="userFirstNameLabel"
+                           Text="Cargando..."
+                           FontSize="16"
+                           TextColor="#333" />
+
+                    <Label Text="Apellido del Usuario"
+                           FontAttributes="Bold"
+                           TextColor="#555"
+                           FontSize="16" />
+                    
+                    <Label x:Name="userLastNameLabel"
                            Text="Cargando..."
                            FontSize="16"
                            TextColor="#333" />

@@ -43,7 +43,6 @@ namespace ProyectoMotos
                 {
                     await conexion.OpenAsync();
 
-                    // Consulta SQL para obtener los datos del usuario
                     string query = "SELECT UsersID, FirstName, LastName, Email, Password FROM users WHERE Email = @user";
                     using (var cmd = new MySqlCommand(query, conexion))
                     {
@@ -54,11 +53,13 @@ namespace ProyectoMotos
                             if (await reader.ReadAsync())
                             {
                                 string dbPassword = reader["Password"].ToString();
-                                bool isValidPassword = dbPassword == EncriptarContrasena(contrasena); // Validamos la contraseña
+                                bool isValidPassword = dbPassword == EncriptarContrasena(contrasena);
 
                                 if (isValidPassword)
                                 {
-                                    // Devolvemos los datos del usuario si la contraseña es válida
+                                    // Depurar los valores obtenidos
+                                    Debug.WriteLine($"First Name: {reader["FirstName"]}, Last Name: {reader["LastName"]}");
+
                                     return new User
                                     {
                                         UserID = reader.GetInt32(0),
@@ -76,8 +77,9 @@ namespace ProyectoMotos
             {
                 await DisplayAlert("Error", "Error al conectar con la base de datos: " + ex.Message, "OK");
             }
-            return null; // Si no encontramos al usuario o la contraseña es incorrecta
+            return null;
         }
+
 
 
         // Clase auxiliar para almacenar los datos del usuario
@@ -129,12 +131,13 @@ namespace ProyectoMotos
                     if (esAdmin)
                     {
                         Debug.WriteLine("Usuario es Admin. Navegando a AdminPage");
-                        await Navigation.PushAsync(new AdminPage(email, "", ""));
+                        // Pasar los valores de FirstName y LastName
+                        await Navigation.PushAsync(new AdminPage(email, usuario.FirstName, usuario.LastName));
                     }
                     else
                     {
                         Debug.WriteLine("Usuario NO es Admin. Navegando a HomePage");
-                        await Navigation.PushAsync(new HomePage(email, usuario.FirstName, usuario.LastName, usuario.UserID));  // Pasamos el userID
+                        await Navigation.PushAsync(new HomePage(email, usuario.FirstName, usuario.LastName, usuario.UserID));
                     }
                 }
             }
@@ -143,6 +146,7 @@ namespace ProyectoMotos
                 await DisplayAlert("Error", "Correo o contraseña incorrectos", "OK");
             }
         }
+
         private async Task EjecutarConsultaQR(int userID)
         {
             try

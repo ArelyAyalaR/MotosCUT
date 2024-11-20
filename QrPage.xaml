@@ -28,7 +28,7 @@
                     x:Name="BarcodeView"
                     HeightRequest="200"
                     WidthRequest="200"
-                    ForegroundColor="#1a73e8"
+                    ForegroundColor="Black"
                     Format="QrCode" />
             </Frame>
 

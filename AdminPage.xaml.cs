@@ -18,11 +18,34 @@ namespace ProyectoMotos
             _emailUsuario = emailUsuario;
             _firstName = firstName;
             _lastName = lastName;
-
-            // Aquí puedes cargar los datos directamente
-            userNameLabel.Text = $"{_firstName} {_lastName}";
-            userEmailLabel.Text = _emailUsuario;
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            // Verificar si los valores no están vacíos
+            if (!string.IsNullOrEmpty(_firstName) && !string.IsNullOrEmpty(_lastName))
+            {
+                userFirstNameLabel.Text = _firstName;
+                userLastNameLabel.Text = _lastName;
+            }
+            else
+            {
+                userFirstNameLabel.Text = "Nombre no disponible";
+                userLastNameLabel.Text = "Apellido no disponible";
+            }
+
+            if (!string.IsNullOrEmpty(_emailUsuario))
+            {
+                userEmailLabel.Text = _emailUsuario;
+            }
+            else
+            {
+                userEmailLabel.Text = "Correo no disponible";
+            }
+        }
+
         private async void OnLogoutClicked(object sender, EventArgs e)
         {
             await Navigation.PopToRootAsync();
@@ -33,5 +56,4 @@ namespace ProyectoMotos
             await Navigation.PushAsync(new CameraPage());
         }
     }
-
 }
