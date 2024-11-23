@@ -7,8 +7,8 @@ namespace ProyectoMotos;
 
 public partial class NewPage1 : ContentPage
 {
-    // Actualiza las credenciales aquí según tu configuración
-    private string connectionString = "Server=motocut.cfko0iqhcsi0.us-east-1.rds.amazonaws.com;Database=motosv3;User ID=admin;     Password=motoCut$2024DB";
+    // Actualiza las credenciales aquÃ­ segÃºn tu configuraciÃ³n
+    private string connectionString = "Server=motocut.cfko0iqhcsi0.us-east-1.rds.amazonaws.com;Database=motosv3;User ID=topeteM;     Password=motoCut$2024DB";
 
     private async void OnLoginClicked(object sender, EventArgs e)
     {
@@ -17,7 +17,7 @@ public partial class NewPage1 : ContentPage
 
         if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
         {
-            await DisplayAlert("Error", "Por favor ingrese un usuario y una contraseña", "OK");
+            await DisplayAlert("Error", "Por favor ingrese un usuario y una contraseÃ±a", "OK");
             return;
         }
 
@@ -25,13 +25,13 @@ public partial class NewPage1 : ContentPage
 
         if (loginExitoso)
         {
-            await DisplayAlert("Éxito", "Login exitoso", "OK");
-            // Navegar a otra página, por ejemplo:
+            await DisplayAlert("Ã‰xito", "Login exitoso", "OK");
+            // Navegar a otra pÃ¡gina, por ejemplo:
             // await Navigation.PushAsync(new MainPage());
         }
         else
         {
-            await DisplayAlert("Error", "Usuario o contraseña incorrectos", "OK");
+            await DisplayAlert("Error", "Usuario o contraseÃ±a incorrectos", "OK");
         }
     }
 
