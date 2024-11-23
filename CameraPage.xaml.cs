@@ -2,6 +2,8 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Data;
 using System.Diagnostics;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ZXing.Net.Maui;
@@ -50,7 +52,7 @@ namespace ProyectoMotos
 
                             int userId = await GetUserIdByQRId(qrId);
 
-                            if (userId != -1) 
+                            if (userId != -1)
                             {
                                 var lastRecord = await GetLastEntryAndExitRecord(userId);
 
@@ -58,7 +60,7 @@ namespace ProyectoMotos
 
                                 if (lastRecord.EaEID != 0 && lastRecord.RecordType == 0)
                                 {
-                                    await CreateEntryAndExitRecord(userId, 1); 
+                                    await CreateEntryAndExitRecord(userId, 1, lastRecord.CurrentHash);
                                     await DisplayAlert("Bienvenido", $"Hola, {lastRecord.FirstName}", "OK");
                                 }
                                 else if (lastRecord.RecordType == 1 || lastRecord.EaEID == 0)
@@ -67,7 +69,8 @@ namespace ProyectoMotos
                                     {
                                         await UpdateRecordTypeToExit(lastRecord.EaEID);
                                     }
-                                    await CreateEntryAndExitRecord(userId, 0); 
+
+                                    await CreateEntryAndExitRecord(userId, 0, lastRecord.CurrentHash);
                                     await DisplayAlert("Hasta luego", "Gracias por tu visita.", "OK");
                                 }
                             }
@@ -109,10 +112,10 @@ namespace ProyectoMotos
             return userId;
         }
 
-        private async Task<(int EaEID, int RecordType, string FirstName)> GetLastEntryAndExitRecord(int userId)
+        private async Task<(int EaEID, int RecordType, string FirstName, string CurrentHash)> GetLastEntryAndExitRecord(int userId)
         {
             string connectionString = "Server=motocut.cfko0iqhcsi0.us-east-1.rds.amazonaws.com;Database=motosv3;User ID=admin;Password=motoCut$2024DB";
-            (int EaEID, int RecordType, string FirstName) lastRecord = (0, -1, string.Empty);
+            (int EaEID, int RecordType, string FirstName, string CurrentHash) lastRecord = (0, -1, string.Empty, string.Empty);
 
             try
             {
@@ -121,12 +124,12 @@ namespace ProyectoMotos
                     await connection.OpenAsync();
 
                     string query = @"
-            SELECT EaEID, RecordType, FirstName
-            FROM entryandexit e
-            JOIN users u ON e.UserID = u.UsersID
-            WHERE e.UserID = @userId
-            ORDER BY TimeStamp DESC
-            LIMIT 1";
+                        SELECT EaEID, RecordType, FirstName, CurrentHash
+                        FROM entryandexit e
+                        JOIN users u ON e.UserID = u.UsersID
+                        WHERE e.UserID = @userId
+                        ORDER BY TimeStamp DESC
+                        LIMIT 1";
                     using (var command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@userId", userId);
@@ -138,7 +141,8 @@ namespace ProyectoMotos
                                 lastRecord = (
                                     EaEID: reader.GetInt32("EaEID"),
                                     RecordType: reader.GetInt32("RecordType"),
-                                    FirstName: reader.GetString("FirstName")
+                                    FirstName: reader.GetString("FirstName"),
+                                    CurrentHash: reader.GetString("CurrentHash")
                                 );
                             }
                         }
@@ -177,7 +181,7 @@ namespace ProyectoMotos
             }
         }
 
-        private async Task CreateEntryAndExitRecord(int userId, int recordType)
+        private async Task CreateEntryAndExitRecord(int userId, int recordType, string previousHash)
         {
             try
             {
@@ -186,16 +190,21 @@ namespace ProyectoMotos
                 {
                     await connection.OpenAsync();
 
-                    string query = "INSERT INTO entryandexit (UserID, RecordType, PreviousHash, CurrentHash) " +
-                                   "VALUES (@userId, @recordType, @previousHash, @currentHash)";
-                    var command = new MySqlCommand(query, connection);
-                    command.Parameters.AddWithValue("@userId", userId);
-                    command.Parameters.AddWithValue("@recordType", recordType);
-                    command.Parameters.AddWithValue("@previousHash", "TEMP");  // Ojo Arely, aqui meto valores TEMP para evitar que la
-                    command.Parameters.AddWithValue("@currentHash", "TEMP");   // BD truene por que no permite NULL 
+                    string currentHash = GenerateHash(userId, recordType, previousHash);
 
-                    await command.ExecuteNonQueryAsync();
-                    Debug.WriteLine("Registro insertado correctamente.");
+                    string query = @"
+                        INSERT INTO entryandexit (UserID, RecordType, PreviousHash, CurrentHash)
+                        VALUES (@userId, @recordType, @previousHash, @currentHash)";
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@userId", userId);
+                        command.Parameters.AddWithValue("@recordType", recordType);
+                        command.Parameters.AddWithValue("@previousHash", previousHash ?? string.Empty);
+                        command.Parameters.AddWithValue("@currentHash", currentHash);
+
+                        await command.ExecuteNonQueryAsync();
+                        Debug.WriteLine("Registro insertado correctamente.");
+                    }
                 }
             }
             catch (MySqlException ex)
@@ -210,10 +219,20 @@ namespace ProyectoMotos
             }
         }
 
+        private string GenerateHash(int userId, int recordType, string previousHash)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                string rawData = $"{userId}-{recordType}-{previousHash}-{DateTime.UtcNow.Ticks}";
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+                return BitConverter.ToString(bytes).Replace("-", "").ToLower();
+            }
+        }
+
         private async void OnScanAgainClicked(object sender, EventArgs e)
         {
             CameraReader.IsDetecting = true;
-            isProcessing = false;  
+            isProcessing = false;
         }
     }
 }
